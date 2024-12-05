@@ -1,14 +1,39 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // Para exibir mensagens de erro
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Aqui você pode adicionar a lógica de autenticação
-    console.log("Email:", email, "Password:", password);
+
+    try {
+      const response = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Salva o token no localStorage
+        localStorage.setItem("token", data.token);
+
+        // Redireciona para o dashboard
+        navigate("/dashboard");
+      } else {
+        // Exibe a mensagem de erro retornada pela API
+        setErrorMessage(data.message || "Erro ao fazer login.");
+      }
+    } catch (error) {
+      setErrorMessage("Erro na conexão com o servidor.");
+    }
   };
 
   return (
@@ -42,6 +67,9 @@ const Login: React.FC = () => {
               className="w-full p-2 border border-gray-300 rounded-md"
             />
           </div>
+          {errorMessage && (
+            <p className="text-sm text-red-500 text-center">{errorMessage}</p>
+          )}
           <div className="flex justify-center">
             <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded-md">
               Entrar
@@ -49,7 +77,6 @@ const Login: React.FC = () => {
           </div>
         </form>
 
-        {/* Botão para redirecionar para a página de cadastro */}
         <div className="mt-4 text-center">
           <p className="text-sm text-gray-600">
             Não tem uma conta?{" "}
