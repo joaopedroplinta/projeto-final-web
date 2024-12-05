@@ -1,3 +1,4 @@
+// app.js
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -5,7 +6,7 @@ require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
-const reportRoutes = require("./routes/reportRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");  // Nova rota
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(bodyParser.json());
 // Rotas
 app.use("/auth", authRoutes);
 app.use("/expenses", expenseRoutes);
-app.use("/reports", reportRoutes);
+app.use("/dashboard", dashboardRoutes);
 
 app.get("/", (req, res) => res.send("API Controle de Gastos funcionando!"));
 
