@@ -2,11 +2,13 @@ const db = require("../config/db");
 
 // Criar nova despesa
 const createExpense = async ({ userId, description, category, amount, date }) => {
+    console.log("Criando despesa:", { userId, description, category, amount, date }); // Adiciona log para depuração
     await db.query("INSERT INTO expenses (user_id, description, category, amount, date) VALUES (?, ?, ?, ?, ?)", [userId, description, category, amount, date]);
 };
 
 // Listar todas as despesas do usuário
 const getExpensesByUserId = async (userId) => {
+    console.log("Buscando despesas para o usuário:", userId); // Log para depuração
     const [rows] = await db.query("SELECT * FROM expenses WHERE user_id = ? ORDER BY date DESC", [userId]);
     return rows;
 };
