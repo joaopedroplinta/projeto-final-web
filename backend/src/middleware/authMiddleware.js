@@ -1,16 +1,20 @@
 const jwt = require("jsonwebtoken");
 
-// Middleware para verificar o token JWT
 const authenticate = (req, res, next) => {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) return res.status(401).json({ message: "Acesso não autorizado" });
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        return res.status(401).json({ message: "Token não fornecido." });
+    }
+
+    const token = authHeader.split(" ")[1];
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.userId = decoded.id; // Adiciona o ID do usuário na requisição
+        req.userId = decoded.id; // Supondo que o `id` está no payload do token
         next();
     } catch (error) {
-        res.status(401).json({ message: "Token inválido" });
+        return res.status(401).json({ message: "Token inválido." });
     }
 };
 
