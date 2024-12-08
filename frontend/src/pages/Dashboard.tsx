@@ -14,6 +14,12 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true); // Controle de carregamento
   const [totalExpenses, setTotalExpenses] = useState<number>(0); // Total das despesas
 
+  // Função para atualizar o total de despesas
+  const updateTotalExpenses = (expenses: Expense[]) => {
+    const total = expenses.reduce((total, expense) => total + expense.amount, 0);
+    setTotalExpenses(total);  // Atualizando o total de despesas
+  };
+
   useEffect(() => {
     const fetchExpenses = async () => {
       const token = localStorage.getItem("token");
@@ -32,10 +38,33 @@ const Dashboard: React.FC = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("Despesas recebidas:", data);  // Verifique o que vem da API
+          console.log("Resposta completa da API:", data);
 
-          setExpenses(data.expenses);  // Definir as despesas
-          setTotalExpenses(data.totalExpenses);  // Definir o total das despesas
+          // Verificando se a resposta é um array
+          if (Array.isArray(data)) {
+            console.log("Estrutura de despesas:", data);
+
+            // Processando as despesas
+            const expensesData = data.map((expense: any) => {
+              const amount = parseFloat(expense.amount);
+              const date = expense.date ? new Date(expense.date).toISOString() : '';
+
+              console.log(`Processando despesa: ${expense.id}, amount: ${amount}, date: ${date}`);
+              
+              return {
+                ...expense,
+                amount: isNaN(amount) ? 0 : amount,  // Garantir que amount seja um número válido
+                date: date,
+              };
+            });
+
+            console.log("Despesas processadas:", expensesData);
+
+            setExpenses(expensesData);  // Atualizando as despesas no estado
+            updateTotalExpenses(expensesData);  // Atualizando o total de despesas
+          } else {
+            console.log("A estrutura de despesas não é um array:", data);
+          }
         } else {
           console.log("Erro ao carregar as despesas", response.status);
           alert("Erro ao carregar as despesas.");
@@ -49,7 +78,7 @@ const Dashboard: React.FC = () => {
     };
 
     fetchExpenses();
-  }, []);
+  }, []); // Certifique-se de que o useEffect seja executado apenas uma vez na carga da página
 
   const handleDelete = async (id: number) => {
     const token = localStorage.getItem("token");
@@ -66,7 +95,9 @@ const Dashboard: React.FC = () => {
       });
 
       if (response.ok) {
-        setExpenses(expenses.filter((expense) => expense.id !== id));
+        const updatedExpenses = expenses.filter((expense) => expense.id !== id);
+        setExpenses(updatedExpenses);
+        updateTotalExpenses(updatedExpenses);  // Atualizando o total de despesas após a exclusão
       } else {
         alert("Erro ao excluir a despesa.");
       }
@@ -80,12 +111,18 @@ const Dashboard: React.FC = () => {
     return <div>Carregando despesas...</div>;
   }
 
+  console.log("Despesas no Dashboard:", expenses);  // Verifique se o estado das despesas está correto
+
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
       <div className="mb-6">
-        <h2 className="text-xl">Total das Despesas: R$ {totalExpenses.toFixed(2)}</h2>
+        {/* Garantir que totalExpenses seja um número */}
+        <h2 className="text-xl">
+          Total das Despesas: R$ {Number(totalExpenses).toFixed(2)}
+        </h2>
       </div>
+      {/* Passando as despesas para o ExpenseTable */}
       <ExpenseTable expenses={expenses} onDelete={handleDelete} />
     </div>
   );
