@@ -1,4 +1,4 @@
-# FinTrack
+# FinanTrack
 ![Logo do Projeto](frontend/src/assets/logo.png)
 
 Este é o repositório do Projeto Final Web, desenvolvido como parte do curso de desenvolvimento web.
