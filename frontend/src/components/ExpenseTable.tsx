@@ -1,4 +1,5 @@
 import React from "react";
+import { FaTrashAlt } from "react-icons/fa"; // Ícone de lixeira
 
 interface Expense {
   id: number;
@@ -14,11 +15,11 @@ interface Props {
 }
 
 const ExpenseTable: React.FC<Props> = ({ expenses, onDelete }) => {
-  console.log("Despesas no componente ExpenseTable:", expenses);  // Verifique as despesas recebidas pelo componente
+  console.log("Despesas no componente ExpenseTable:", expenses); // Verifique as despesas recebidas pelo componente
 
   return (
-    <table className="table-auto w-full bg-white shadow-md rounded-lg overflow-hidden">
-      <thead className="bg-blue-500 text-white">
+    <table className="table-auto w-full bg-white dark:bg-[#1e2a47] shadow-md rounded-lg overflow-hidden">
+      <thead className="bg-[#012840] dark:bg-[#03658C] text-white">
         <tr>
           <th className="px-4 py-2">Descrição</th>
           <th className="px-4 py-2">Categoria</th>
@@ -30,7 +31,7 @@ const ExpenseTable: React.FC<Props> = ({ expenses, onDelete }) => {
       <tbody>
         {expenses.length > 0 ? (
           expenses.map((expense) => (
-            <tr key={expense.id} className="border-b">
+            <tr key={expense.id} className="border-b dark:border-gray-700">
               <td className="px-4 py-2">{expense.description}</td>
               <td className="px-4 py-2">{expense.category}</td>
               <td className="px-4 py-2">
@@ -42,7 +43,9 @@ const ExpenseTable: React.FC<Props> = ({ expenses, onDelete }) => {
                 <button
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                   onClick={() => onDelete(expense.id)}
+                  aria-label={`Excluir despesa ${expense.description}`} // Melhorando a acessibilidade
                 >
+                  <FaTrashAlt className="inline-block mr-2" />
                   Excluir
                 </button>
               </td>
