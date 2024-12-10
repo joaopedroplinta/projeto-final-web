@@ -1,16 +1,15 @@
 const express = require("express");
 const {
-    getSummary,
-    getExpensesByCategory,
-    getExpensesByMonth,
-} = require("../controllers/reportController");
+  getFullReport, // Função principal do relatório
+  getMonthlySummary, // Função do resumo mensal
+  getExpensesByCategory, // Função de despesas por categoria
+  getExpensesByMonth // Função de despesas por mês
+} = require("../controllers/reportController"); // Certifique-se de que o caminho está correto
 const { authenticate } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 // Rotas protegidas para relatórios
-router.get("/summary", authenticate, getSummary);
-router.get("/by-category", authenticate, getExpensesByCategory);
-router.get("/by-month", authenticate, getExpensesByMonth);
+router.get("/", authenticate, getFullReport); // Endpoint principal
 
 module.exports = router;
