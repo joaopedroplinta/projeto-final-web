@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-blue-500 p-4">
+    <nav className="bg-[#0BB3D9] p-4">
       <ul className="flex space-x-4">
         {isAuthenticated ? (
           <>
