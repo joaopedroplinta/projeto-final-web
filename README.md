@@ -9,14 +9,14 @@ O projeto consiste em uma aplicação web completa, utilizando tecnologias moder
 ## Tecnologias Utilizadas
 
 - **Front-end:**
-    - React
-    - TypeScript
-    - TailwindCSS
+     - React
+     - TypeScript
+     - TailwindCSS
 
 - **Back-end:**
-    - Node.js
-    - Express
-    - MySQL
+     - Node.js
+     - Express
+     - MySQL
 
 ## Funcionalidades
 
@@ -25,32 +25,36 @@ O projeto consiste em uma aplicação web completa, utilizando tecnologias moder
 - Interface responsiva
 - Integração com API externa
 
+## Captura de Tela
+
+![Captura de Tela do Projeto](frontend/src/assets/tela_dashboard.png)
+
 ## Como Executar o Projeto
 
 1. Clone o repositório:
-     ```bash
-     git clone https://github.com/joaopedroplinta/projeto-final-web.git
-     ```
+      ```bash
+      git clone https://github.com/joaopedroplinta/projeto-final-web.git
+      ```
 
 2. Navegue até o diretório do projeto:
-     ```bash
-     cd projeto-final-web
-     ```
+      ```bash
+      cd projeto-final-web
+      ```
 
 3. Instale as dependências:
-     ```bash
-     npm install
-     ```
+      ```bash
+      npm install
+      ```
 
 4. Inicie o servidor:
-     ```bash
-     npm start
-     ```
+      ```bash
+      npm start
+      ```
 
 5. Acesse a aplicação no navegador:
-     ```
-     http://localhost:3000
-     ```
+      ```
+      http://localhost:3000
+      ```
 
 ## Contribuição
 
