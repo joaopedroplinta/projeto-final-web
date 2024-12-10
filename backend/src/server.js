@@ -6,7 +6,8 @@ require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
-const dashboardRoutes = require("./routes/dashboardRoutes");  // Nova rota
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const reportRoutes = require("./routes/reportRoutes");
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 app.use("/auth", authRoutes);
 app.use("/expenses", expenseRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/reports", reportRoutes)
 
 app.get("/", (req, res) => res.send("API Controle de Gastos funcionando!"));
 
