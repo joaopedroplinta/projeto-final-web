@@ -21,6 +21,11 @@ const Dashboard: React.FC = () => {
   const [totalExpenses, setTotalExpenses] = useState<number>(0); // Total das despesas
   const [errorMessage, setErrorMessage] = useState<string>(""); // Controle de erros
 
+  // Função para normalizar categorias
+  const normalizeCategory = (category: string): string => {
+    return category.trim().toLowerCase(); // Remove espaços e converte para minúsculas
+  };
+
   // Função para atualizar o total de despesas
   const updateTotalExpenses = (expenses: Expense[]) => {
     const total = expenses.reduce((total, expense) => total + expense.amount, 0);
@@ -48,50 +53,40 @@ const Dashboard: React.FC = () => {
           const data = await response.json();
           console.log("Resposta completa da API:", data);
 
-          // Verificando se a resposta é um array
           if (Array.isArray(data)) {
-            console.log("Estrutura de despesas:", data);
-
-            // Processando as despesas
             const expensesData = data.map((expense: any) => {
               const amount = parseFloat(expense.amount);
               const date = expense.date ? new Date(expense.date).toISOString() : '';
-
-              console.log(`Processando despesa: ${expense.id}, amount: ${amount}, date: ${date}`);
-              
               return {
                 ...expense,
-                amount: isNaN(amount) ? 0 : amount,  // Garantir que amount seja um número válido
-                date: date,
+                amount: isNaN(amount) ? 0 : amount,
+                date,
+                category: normalizeCategory(expense.category), // Normaliza a categoria
               };
             });
 
-            console.log("Despesas processadas:", expensesData);
-
-            setExpenses(expensesData);  // Atualizando as despesas no estado
-            updateTotalExpenses(expensesData);  // Atualizando o total de despesas
-            toast.success("Despesas carregadas com sucesso!"); // Toast de sucesso ao carregar as despesas
+            setExpenses(expensesData);
+            updateTotalExpenses(expensesData);
+            toast.success("Despesas carregadas com sucesso!");
           } else {
-            console.log("A estrutura de despesas não é um array:", data);
             setErrorMessage("Erro ao carregar as despesas.");
-            toast.error("Erro ao carregar as despesas."); // Toast de erro se a estrutura não for um array
+            toast.error("Erro ao carregar as despesas.");
           }
         } else {
-          console.log("Erro ao carregar as despesas", response.status);
           setErrorMessage("Erro ao carregar as despesas.");
-          toast.error("Erro ao carregar as despesas."); // Toast de erro ao falhar ao buscar as despesas
+          toast.error("Erro ao carregar as despesas.");
         }
       } catch (error) {
         console.error("Erro durante a requisição:", error);
         setErrorMessage("Erro ao carregar as despesas.");
-        toast.error("Erro ao carregar as despesas."); // Toast de erro em caso de erro na requisição
+        toast.error("Erro ao carregar as despesas.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchExpenses();
-  }, []); // Certifique-se de que o useEffect seja executado apenas uma vez na carga da página
+  }, []);
 
   const handleDelete = async (id: number) => {
     const token = localStorage.getItem("token");
@@ -110,29 +105,37 @@ const Dashboard: React.FC = () => {
       if (response.ok) {
         const updatedExpenses = expenses.filter((expense) => expense.id !== id);
         setExpenses(updatedExpenses);
-        updateTotalExpenses(updatedExpenses);  // Atualizando o total de despesas após a exclusão
-        toast.success("Despesa excluída com sucesso!"); // Toast de sucesso ao excluir a despesa
+        updateTotalExpenses(updatedExpenses);
+        toast.success("Despesa excluída com sucesso!");
       } else {
-        toast.error("Erro ao excluir a despesa."); // Toast de erro ao falhar ao excluir a despesa
+        toast.error("Erro ao excluir a despesa.");
       }
     } catch (error) {
       console.error("Erro ao excluir a despesa:", error);
-      toast.error("Erro ao excluir a despesa."); // Toast de erro em caso de erro na exclusão
+      toast.error("Erro ao excluir a despesa.");
     }
   };
 
+  // Agrupando despesas por categoria
+  const groupExpensesByCategory = () => {
+    const grouped: { [key: string]: number } = {};
+    expenses.forEach((expense) => {
+      grouped[expense.category] = (grouped[expense.category] || 0) + expense.amount;
+    });
+    return grouped;
+  };
+
+  const groupedExpenses = groupExpensesByCategory();
+
   // Preparando os dados para o gráfico de pizza
   const chartData = {
-    labels: [...new Set(expenses.map(expense => expense.category))], // Categorias únicas
+    labels: Object.keys(groupedExpenses).map((category) => 
+      category.charAt(0).toUpperCase() + category.slice(1) // Capitaliza a categoria
+    ),
     datasets: [
       {
         label: "Despesas por Categoria",
-        data: [...new Set(expenses.map(expense => expense.category))].map(
-          (category) =>
-            expenses
-              .filter((expense) => expense.category === category)
-              .reduce((sum, expense) => sum + expense.amount, 0)
-        ),
+        data: Object.values(groupedExpenses),
         backgroundColor: [
           "rgba(255, 99, 132, 0.6)", 
           "rgba(54, 162, 235, 0.6)",
@@ -140,7 +143,7 @@ const Dashboard: React.FC = () => {
           "rgba(75, 192, 192, 0.6)",
           "rgba(153, 102, 255, 0.6)",
           "rgba(255, 159, 64, 0.6)"
-        ], // Cores diferentes para as fatias
+        ],
         borderColor: [
           "rgba(255, 99, 132, 1)", 
           "rgba(54, 162, 235, 1)",
@@ -158,27 +161,22 @@ const Dashboard: React.FC = () => {
     return <div>Carregando despesas...</div>;
   }
 
-  console.log("Despesas no Dashboard:", expenses);  // Verifique se o estado das despesas está correto
-
   return (
     <div className="p-8 dark:bg-[#011826]">
       <h1 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white">Dashboard</h1>
       <div className="mb-6">
-        {/* Garantir que totalExpenses seja um número */}
         <h2 className="text-xl text-gray-800 dark:text-white">
           Total das Despesas: R$ {Number(totalExpenses).toFixed(2)}
         </h2>
       </div>
 
-      {/* Gráfico de pizza */}
       <div className="mb-6">
         <h3 className="text-2xl mb-4 text-gray-800 dark:text-white">Distribuição das Despesas por Categoria</h3>
         <div className="w-64 h-64">
-        <Pie data={chartData} />
+          <Pie data={chartData} />
         </div>
       </div>
 
-      {/* Passando as despesas para o ExpenseTable */}
       <ExpenseTable expenses={expenses} onDelete={handleDelete} />
     </div>
   );
