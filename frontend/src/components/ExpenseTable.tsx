@@ -21,25 +21,27 @@ const ExpenseTable: React.FC<Props> = ({ expenses, onDelete }) => {
     <table className="table-auto w-full bg-white dark:bg-[#1e2a47] shadow-md rounded-lg overflow-hidden">
       <thead className="bg-[#012840] dark:bg-[#03658C] text-white">
         <tr>
-          <th className="px-4 py-2">Descrição</th>
-          <th className="px-4 py-2">Categoria</th>
-          <th className="px-4 py-2">Valor</th>
-          <th className="px-4 py-2">Data</th>
-          <th className="px-4 py-2">Ações</th>
+          <th className="px-4 py-2 text-center">Descrição</th>
+          <th className="px-4 py-2 text-center">Categoria</th>
+          <th className="px-4 py-2 text-center">Valor</th>
+          <th className="px-4 py-2 text-center">Data</th>
+          <th className="px-4 py-2 text-center">Ações</th>
         </tr>
       </thead>
       <tbody>
         {expenses.length > 0 ? (
           expenses.map((expense) => (
             <tr key={expense.id} className="border-b dark:border-gray-700">
-              <td className="px-4 py-2">{expense.description}</td>
-              <td className="px-4 py-2">{expense.category}</td>
-              <td className="px-4 py-2">
+              <td className="px-4 py-2 text-center">{expense.description}</td>
+              <td className="px-4 py-2 text-center">{expense.category}</td>
+              <td className="px-4 py-2 text-center">
                 {/* Garantir que 'amount' seja tratado como número */}
                 R$ {expense.amount.toFixed(2)}
               </td>
-              <td className="px-4 py-2">{new Date(expense.date).toLocaleDateString()}</td>
-              <td className="px-4 py-2">
+              <td className="px-4 py-2 text-center">
+                {new Date(expense.date).toLocaleDateString()}
+              </td>
+              <td className="px-4 py-2 text-center">
                 <button
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                   onClick={() => onDelete(expense.id)}
