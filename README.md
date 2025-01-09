@@ -42,19 +42,44 @@ O projeto consiste em uma aplicação web completa, utilizando tecnologias moder
       cd projeto-final-web
       ```
 
-3. Instale as dependências:
+3. Abra 1 terminal e navegue até o diretório do front-end:
+      ```bash
+      cd frontend
+      ```
+
+4. Abra 1 terminal e navegue até o diretório do back-end:
+      ```bash
+      cd backend
+      ```
+
+5. Instale as dependências nos 2 terminais:
       ```bash
       npm install
       ```
 
-4. Inicie o servidor:
+6. Navegue até o diretório do db:
+      ```bash
+      cd db
+      ```
+
+7. Inicie o banco de dados no seu database:
+      ```bash
+      controle_de_gastos.sql
+      ```
+
+8. Inicie o servidor no terminal do backend:
       ```bash
       npm start
       ```
 
-5. Acesse a aplicação no navegador:
+9. Inicie o frontend:
+      ```bash
+      cd npm run dev
       ```
-      http://localhost:3000
+
+10. Acesse a aplicação no navegador:
+      ```
+      http://localhost:5173/
       ```
 
 ## Contribuição
