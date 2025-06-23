@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finantrack-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finantrack-frontend
+  template:
+    metadata:
+      labels:
+        app: finantrack-frontend
+    spec:
+      containers:
+      - name: finantrack-frontend
+        image: joaoplinta/finantrack-web:latest
+        ports:
+        - containerPort: 80

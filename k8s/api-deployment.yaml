@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finantrack-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finantrack-api
+  template:
+    metadata:
+      labels:
+        app: finantrack-api
+    spec:
+      containers:
+      - name: finantrack-api
+        image: joaoplinta/finantrack-api:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_HOST
+          value: finantrack-db
+        - name: DB_USER
+          value: root
+        - name: DB_PASSWORD
+          value: root
+        - name: DB_NAME
+          value: controle_de_gastos
+        - name: PORT
+          value: "3000"
+        - name: JWT_SECRET
+          value: secret

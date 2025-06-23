@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: finantrack-db
+spec:
+  selector:
+    app: finantrack-db
+  ports:
+    - protocol: TCP
+      port: 3306
