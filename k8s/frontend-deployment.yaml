@@ -14,6 +14,7 @@ spec:
     spec:
       containers:
       - name: finantrack-frontend
-        image: joaoplinta/finantrack-web:latest
+        imagePullPolicy: Never
+        image: finantrack-web:latest
         ports:
         - containerPort: 80

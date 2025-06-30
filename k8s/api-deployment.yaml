@@ -12,9 +12,11 @@ spec:
       labels:
         app: finantrack-api
     spec:
+    
       containers:
       - name: finantrack-api
-        image: joaoplinta/finantrack-api:latest
+        image: finantrack-api:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 3000
         env:
